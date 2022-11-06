@@ -1,7 +1,6 @@
 package processor
 
 import (
-	"github.com/samber/lo"
 	"github.com/supernova0730/rickandmortysync/client"
 	"github.com/supernova0730/rickandmortysync/model"
 	"github.com/supernova0730/rickandmortysync/repository"
@@ -83,11 +82,11 @@ func (p *Processor) synchronise(page int) error {
 		}
 
 		c := p.toModel(character)
-		err = lo.Ternary(
-			exists,
-			p.repo.UpdateByID(character.ID, c),
-			p.repo.Insert(c),
-		)
+		if exists {
+			err = p.repo.UpdateByID(character.ID, c)
+		} else {
+			err = p.repo.Insert(c)
+		}
 		if err != nil {
 			return err
 		}
