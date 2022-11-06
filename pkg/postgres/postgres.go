@@ -1,11 +1,10 @@
 package postgres
 
 import (
+	"database/sql"
 	"fmt"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	_ "github.com/lib/pq"
 )
 
 type Config struct {
@@ -17,11 +16,17 @@ type Config struct {
 	SSLMode  string
 }
 
-func Connect(config Config) (*gorm.DB, error) {
-	dialector := postgres.Open(config.DSN())
-	return gorm.Open(dialector, &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
-	})
+func Connect(config Config) (*sql.DB, error) {
+	db, err := sql.Open("postgres", config.DSN())
+	if err != nil {
+		return nil, fmt.Errorf("failed to open connection: %v", err)
+	}
+
+	if err = db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to ping: %v", err)
+	}
+
+	return db, nil
 }
 
 func (c Config) DSN() string {
