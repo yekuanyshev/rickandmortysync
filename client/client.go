@@ -8,15 +8,19 @@ import (
 
 type Client struct {
 	rest *rest.Client
+	url  string
 }
 
 func New(rest *rest.Client) *Client {
-	return &Client{rest: rest}
+	return &Client{
+		rest: rest,
+		url:  "https://rickandmortyapi.com/api/character/",
+	}
 }
 
 func (p *Client) GetInfo() (info Info, err error) {
 	var result Response
-	err = p.rest.Get("https://rickandmortyapi.com/api/character/", &result)
+	err = p.rest.Get(p.url, &result)
 	if err != nil {
 		err = fmt.Errorf("failed to get info: %v", err)
 		return
@@ -28,7 +32,7 @@ func (p *Client) GetInfo() (info Info, err error) {
 
 func (p *Client) GetCharactersByPage(page int) (characters []Character, err error) {
 	var response Response
-	url := fmt.Sprintf("https://rickandmortyapi.com/api/character/?page=%d", page)
+	url := fmt.Sprintf(p.url+"?page=%d", page)
 	err = p.rest.Get(url, &response)
 	if err != nil {
 		err = fmt.Errorf("failed to get characters: %v", err)
