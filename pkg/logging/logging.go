@@ -2,6 +2,14 @@ package logging
 
 import "log"
 
+const (
+	FATAL = "FATAL"
+	ERROR = "ERROR"
+	DEBUG = "DEBUG"
+	WARN  = "WARN"
+	INFO  = "INFO"
+)
+
 func Fatal(message string) {
 	log.Fatalf("[FATAL] %s\n", message)
 }
