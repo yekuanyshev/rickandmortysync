@@ -31,7 +31,7 @@ func main() {
 	prc := processor.New(rickAndMortyClient, repo)
 
 	started := time.Now()
-	numOfWorkers := 24
+	numOfWorkers := 48
 	err = prc.SyncByNumWorkers(numOfWorkers)
 	if err != nil {
 		log.Fatal(err)
